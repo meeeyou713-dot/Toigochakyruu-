@@ -1827,75 +1827,86 @@ input{
    MUSIC
 ================================================== */
 
-const cover =
-    document.getElementById("cover");
+    <script>
 
 const openInvitation =
     document.getElementById("openInvitation");
 
-const weddingMusic =
+const cover =
+    document.getElementById("cover");
+
+const music =
     document.getElementById("weddingMusic");
 
 const musicButton =
     document.getElementById("musicButton");
 
 
-/*
-   ЭҢ МААНИЛҮҮ БӨЛҮК:
+openInvitation.addEventListener("click", async function () {
 
-   Колдонуучу "ЧАКЫРУУНУ АЧУУ" басканда
-   браузер music.play() иштетүүгө уруксат берет.
-*/
+    // Чакыруу ачылат
+    cover.classList.add("opened");
 
-openInvitation.addEventListener(
-    "click",
-    function(){
+    document.body.classList.remove("locked");
 
-        cover.classList.add("opened");
-
-        document.body.classList.remove("locked");
-
-        musicButton.classList.add("show");
+    musicButton.classList.add("show");
 
 
-        /*
-           Музыканын башынан башталышы
-        */
+    // Музыка башынан башталат
+    music.currentTime = 0;
 
-        weddingMusic.currentTime = 0;
+    music.volume = 1;
 
-        weddingMusic.volume = 0.7;
+    try {
+
+        await music.play();
+
+        musicButton.innerHTML = "♫";
+
+        console.log("МУЗЫКА ИШТЕДИ");
+
+    } catch (error) {
+
+        console.error("МУЗЫКА ИШТЕГЕН ЖОК:", error);
+
+        musicButton.innerHTML = "▶";
+
+        alert(
+            "Музыка ачылган жок. MP3 файлынын атын жана жайгашкан жерин текшериңиз."
+        );
+
+    }
+
+});
 
 
-        const playPromise =
-            weddingMusic.play();
+musicButton.addEventListener("click", async function () {
 
+    if (music.paused) {
 
-        if(playPromise !== undefined){
+        try {
 
-            playPromise
-                .then(function(){
+            await music.play();
 
-                    musicButton.innerHTML = "♫";
+            musicButton.innerHTML = "♫";
 
-                })
-                .catch(function(error){
+        } catch (error) {
 
-                    console.log(
-                        "Музыка иштеген жок:",
-                        error
-                    );
-
-                    musicButton.innerHTML = "▶";
-
-                });
+            console.error(error);
 
         }
 
+    } else {
+
+        music.pause();
+
+        musicButton.innerHTML = "▶";
+
     }
-);
 
+});
 
+</script>
 /* ==================================================
    MUSIC ON / OFF
 ================================================== */
